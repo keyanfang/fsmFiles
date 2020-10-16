@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -45,6 +46,24 @@ public class DrinkFactoryMachine extends JFrame {
 	JButton money10centsButton;
 	JButton nfcBiiiipButton;
 	
+	int drinkPrice = -1;
+	int coinValue = -1;
+	int refund = -1;
+	
+	
+	public void initialDrinkButton() { 
+		coffeeButton.setBackground(Color.DARK_GRAY);
+		expressoButton.setBackground(Color.DARK_GRAY);
+		teaButton.setBackground(Color.DARK_GRAY);
+	}
+	
+	public void initialSliders() { 
+		sugarSlider.setValue(0);
+		sizeSlider.setValue(1);
+		temperatureSlider.setValue(2);
+	}
+	
+	 
 	class DrinkInterfaceImplementation implements SCInterfaceListener {
 		DrinkFactoryMachine thedm;
 		
@@ -55,6 +74,39 @@ public class DrinkFactoryMachine extends JFrame {
 		@Override
 		public void onWaitCoinRaised() {
 			messagesToUser.setText("Please pay with coin");
+			switch(coinValue){
+				case 50:
+					money50centsButton.setBackground(Color.green);
+					try {
+						TimeUnit.MILLISECONDS.sleep(500);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					refund = coinValue - drinkPrice;
+					messagesToUser.setText("You paid 50 cents of coins");
+					break;
+				case 25:
+					money25centsButton.setBackground(Color.green);
+					try {
+						TimeUnit.MILLISECONDS.sleep(500);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					refund = coinValue - drinkPrice;
+					messagesToUser.setText("You paid 25 cents of coins");
+					break;
+				case 10:
+					money10centsButton.setBackground(Color.green);
+					try {
+						TimeUnit.MILLISECONDS.sleep(500);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					refund = coinValue - drinkPrice;
+					messagesToUser.setText("You paid 10 cents of coins");
+					break;
+				}
+			
 			
 			// TODO Auto-generated method stub
 		}
@@ -63,31 +115,62 @@ public class DrinkFactoryMachine extends JFrame {
 		public void onWaitNFCRaised() {
 			messagesToUser.setText("Please pay with NFC");
         	nfcBiiiipButton.setBackground(Color.green);
-        	
-			// TODO Auto-generated method stub
+        	try {
+				TimeUnit.MILLISECONDS.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+        	messagesToUser.setText("Payment is successful");
+        	theFSM.raiseNFCSuccess();
 		}
 
 		@Override
-		public void onInitialRaised() {
-			messagesToUser.setText("<html>This is<br>place to communicate <br> with the user");
-			coffeeButton.setBackground(Color.DARK_GRAY);
-			expressoButton.setBackground(Color.DARK_GRAY);
-			teaButton.setBackground(Color.DARK_GRAY);
+		public void onInitialRaised() { 
+			messagesToUser.setText("<html>You have not operated for 45 seconds<br>"
+					+ "the order has been cancelled <br>the refund has been made");
+			initialDrinkButton();
 			nfcBiiiipButton.setBackground(Color.DARK_GRAY);
 			money50centsButton.setBackground(Color.DARK_GRAY);
 			money25centsButton.setBackground(Color.DARK_GRAY);
 			money10centsButton.setBackground(Color.DARK_GRAY);
-			
+			drinkPrice = 0;
+			coinValue = 0;
+			refund = 0;
+			initialSliders();
 			// TODO Auto-generated method stub
 			
-			onInitSlideRaised();
+			
 		}
 
 		@Override
-		public void onInitSlideRaised() {
-			sugarSlider.setValue(0);
-			sizeSlider.setValue(1);
-			temperatureSlider.setValue(2);
+		public void onIsActiveRaised() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onCancelOrderRaised() {
+			messagesToUser.setText("<html>Your order is canceled");
+			initialDrinkButton();
+			nfcBiiiipButton.setBackground(Color.DARK_GRAY);
+			money50centsButton.setBackground(Color.DARK_GRAY);
+			money25centsButton.setBackground(Color.DARK_GRAY);
+			money10centsButton.setBackground(Color.DARK_GRAY);
+			drinkPrice = 0;
+			coinValue = 0;
+			refund = 0;
+			initialSliders();
+		}
+
+		@Override
+		public void onCaculateRefundRaised() {
+			if(refund>0) {
+				messagesToUser.setText("<html>Payment is successful and start to make drinks<br>you will get a refund of 0."+refund);
+			}else if(refund==0) {
+				messagesToUser.setText("Payment is successful, start to make drinks");
+			}else if(refund<0) {
+				messagesToUser.setText("You still need to pay"+(-refund));
+			}
 		}
 		
 	}
@@ -168,6 +251,9 @@ public class DrinkFactoryMachine extends JFrame {
 		coffeeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	initialDrinkButton();
+            	drinkPrice = 35;
+            	coffeeButton.setBackground(Color.green);
             	theFSM.raiseChooseDrink();
             }
         });
@@ -180,6 +266,9 @@ public class DrinkFactoryMachine extends JFrame {
 		expressoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	initialDrinkButton();
+            	drinkPrice = 50;
+            	expressoButton.setBackground(Color.green);
             	theFSM.raiseChooseDrink();
             }
         });
@@ -192,6 +281,9 @@ public class DrinkFactoryMachine extends JFrame {
 		teaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	initialDrinkButton();
+            	drinkPrice = 40;
+            	teaButton.setBackground(Color.green);
             	theFSM.raiseChooseDrink();
             }
         });
@@ -312,7 +404,7 @@ public class DrinkFactoryMachine extends JFrame {
 		money50centsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	money50centsButton.setBackground(Color.green);
+            	coinValue = 50;
             	theFSM.raiseChooseCoin();
             }
         });
@@ -324,7 +416,7 @@ public class DrinkFactoryMachine extends JFrame {
 		money25centsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	money25centsButton.setBackground(Color.green);
+            	coinValue = 25;
             	theFSM.raiseChooseCoin();
             } 
         });
@@ -336,7 +428,7 @@ public class DrinkFactoryMachine extends JFrame {
 		money10centsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	money10centsButton.setBackground(Color.green);
+            	coinValue = 10;
             	theFSM.raiseChooseCoin();
             }
         });
