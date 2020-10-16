@@ -31,8 +31,6 @@ import fr.univcotedazur.polytech.si4.fsm.project.drink.DrinkStatemachine;
 import fr.univcotedazur.polytech.si4.fsm.project.drink.IDrinkStatemachine.SCInterfaceListener;
 
 
-
-
 public class DrinkFactoryMachine extends JFrame {
 	JLabel messagesToUser;
 	JSlider sugarSlider;
@@ -57,6 +55,7 @@ public class DrinkFactoryMachine extends JFrame {
 		@Override
 		public void onWaitCoinRaised() {
 			messagesToUser.setText("Please pay with coin");
+			
 			// TODO Auto-generated method stub
 		}
 
@@ -64,12 +63,20 @@ public class DrinkFactoryMachine extends JFrame {
 		public void onWaitNFCRaised() {
 			messagesToUser.setText("Please pay with NFC");
         	nfcBiiiipButton.setBackground(Color.green);
+        	
 			// TODO Auto-generated method stub
 		}
 
 		@Override
 		public void onInitialRaised() {
 			messagesToUser.setText("<html>This is<br>place to communicate <br> with the user");
+			coffeeButton.setBackground(Color.DARK_GRAY);
+			expressoButton.setBackground(Color.DARK_GRAY);
+			teaButton.setBackground(Color.DARK_GRAY);
+			nfcBiiiipButton.setBackground(Color.DARK_GRAY);
+			money50centsButton.setBackground(Color.DARK_GRAY);
+			money25centsButton.setBackground(Color.DARK_GRAY);
+			money10centsButton.setBackground(Color.DARK_GRAY);
 			
 			// TODO Auto-generated method stub
 			
@@ -154,43 +161,40 @@ public class DrinkFactoryMachine extends JFrame {
 		contentPane.add(lblCoins);
 
 		coffeeButton = new JButton("Coffee");
-		coffeeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	theFSM.raiseChooseDrink();
-            	coffeeButton.setBackground(Color.green);
-//            	expressButton.setBackground(Color.);
-            }
-        });
-		
 		coffeeButton.setForeground(Color.WHITE);
 		coffeeButton.setBackground(Color.DARK_GRAY);
 		coffeeButton.setBounds(12, 34, 96, 25);
 		contentPane.add(coffeeButton);
+		coffeeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	theFSM.raiseChooseDrink();
+            }
+        });
 
 		expressoButton = new JButton("Expresso");
+		expressoButton.setForeground(Color.WHITE);
+		expressoButton.setBackground(Color.DARK_GRAY);
+		expressoButton.setBounds(12, 71, 96, 25);
+		contentPane.add(expressoButton);
 		expressoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	theFSM.raiseChooseDrink();
             }
         });
-		expressoButton.setForeground(Color.WHITE);
-		expressoButton.setBackground(Color.DARK_GRAY);
-		expressoButton.setBounds(12, 71, 96, 25);
-		contentPane.add(expressoButton);
 
 		teaButton = new JButton("Tea");
+		teaButton.setForeground(Color.WHITE);
+		teaButton.setBackground(Color.DARK_GRAY);
+		teaButton.setBounds(12, 108, 96, 25);
+		contentPane.add(teaButton);
 		teaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	theFSM.raiseChooseDrink();
             }
         });
-		teaButton.setForeground(Color.WHITE);
-		teaButton.setBackground(Color.DARK_GRAY);
-		teaButton.setBounds(12, 108, 96, 25);
-		contentPane.add(teaButton);
 
 		JButton soupButton = new JButton("Soup");
 		soupButton.setForeground(Color.WHITE);
@@ -314,6 +318,9 @@ public class DrinkFactoryMachine extends JFrame {
         });
 
 		money25centsButton = new JButton("0.25 €");
+		money25centsButton.setForeground(Color.WHITE);
+		money25centsButton.setBackground(Color.DARK_GRAY);
+		panel.add(money25centsButton);
 		money25centsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -321,11 +328,11 @@ public class DrinkFactoryMachine extends JFrame {
             	theFSM.raiseChooseCoin();
             } 
         });
-		money25centsButton.setForeground(Color.WHITE);
-		money25centsButton.setBackground(Color.DARK_GRAY);
-		panel.add(money25centsButton);
 
 		money10centsButton = new JButton("0.10 €");
+		money10centsButton.setForeground(Color.WHITE);
+		money10centsButton.setBackground(Color.DARK_GRAY);
+		panel.add(money10centsButton);
 		money10centsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -333,9 +340,6 @@ public class DrinkFactoryMachine extends JFrame {
             	theFSM.raiseChooseCoin();
             }
         });
-		money10centsButton.setForeground(Color.WHITE);
-		money10centsButton.setBackground(Color.DARK_GRAY);
-		panel.add(money10centsButton);
 
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(Color.DARK_GRAY);
