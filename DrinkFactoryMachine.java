@@ -46,9 +46,11 @@ public class DrinkFactoryMachine extends JFrame {
 	JButton money10centsButton;
 	JButton nfcBiiiipButton;
 	
-	int drinkPrice = -1;
-	int coinValue = -1;
+	int drinkPrice = -1; 
+	int paidCoinsValue = -1;
+	int myCoin = -1;
 	int refund = -1;
+	boolean startPrepare; // TODO Auto-generated
 	
 	
 	public void initialDrinkButton() { 
@@ -63,6 +65,14 @@ public class DrinkFactoryMachine extends JFrame {
 		temperatureSlider.setValue(2);
 	}
 	
+	public void myWait(int myTime) { 
+		try {
+			TimeUnit.MILLISECONDS.sleep(myTime);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	 
 	class DrinkInterfaceImplementation implements SCInterfaceListener {
 		DrinkFactoryMachine thedm;
@@ -73,42 +83,16 @@ public class DrinkFactoryMachine extends JFrame {
 		
 		@Override
 		public void onWaitCoinRaised() {
-			messagesToUser.setText("Please pay with coin");
-			switch(coinValue){
-				case 50:
-					money50centsButton.setBackground(Color.green);
-					try {
-						TimeUnit.MILLISECONDS.sleep(500);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					refund = coinValue - drinkPrice;
-					messagesToUser.setText("You paid 50 cents of coins");
-					break;
-				case 25:
-					money25centsButton.setBackground(Color.green);
-					try {
-						TimeUnit.MILLISECONDS.sleep(500);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					refund = coinValue - drinkPrice;
-					messagesToUser.setText("You paid 25 cents of coins");
-					break;
-				case 10:
-					money10centsButton.setBackground(Color.green);
-					try {
-						TimeUnit.MILLISECONDS.sleep(500);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					refund = coinValue - drinkPrice;
-					messagesToUser.setText("You paid 10 cents of coins");
-					break;
-				}
-			
-			
-			// TODO Auto-generated method stub
+			messagesToUser.setText("Please continue");
+			if(paidCoinsValue==-1) {
+				paidCoinsValue=0;
+			}
+
+			myWait(500);
+			paidCoinsValue += myCoin;
+			if(drinkPrice!=-1) {
+				onComfirmCoinsRaised();
+			} 	
 		}
 
 		@Override
@@ -127,52 +111,47 @@ public class DrinkFactoryMachine extends JFrame {
 		@Override
 		public void onInitialRaised() { 
 			messagesToUser.setText("<html>You have not operated for 45 seconds<br>"
-					+ "the order has been cancelled <br>the refund has been made");
+					+ "The order has been canceled <br>The refund has been made");
 			initialDrinkButton();
 			nfcBiiiipButton.setBackground(Color.DARK_GRAY);
-			money50centsButton.setBackground(Color.DARK_GRAY);
-			money25centsButton.setBackground(Color.DARK_GRAY);
-			money10centsButton.setBackground(Color.DARK_GRAY);
-			drinkPrice = 0;
-			coinValue = 0;
-			refund = 0;
+			drinkPrice = -1;
+			paidCoinsValue = -1;
+			refund = -1;
 			initialSliders();
 			// TODO Auto-generated method stub
 			
-			
-		}
-
-		@Override
-		public void onIsActiveRaised() {
-			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public void onCancelOrderRaised() {
-			messagesToUser.setText("<html>Your order is canceled");
+			messagesToUser.setText("<html>The order has been canceled <br>The refund has been made");
 			initialDrinkButton();
 			nfcBiiiipButton.setBackground(Color.DARK_GRAY);
-			money50centsButton.setBackground(Color.DARK_GRAY);
-			money25centsButton.setBackground(Color.DARK_GRAY);
-			money10centsButton.setBackground(Color.DARK_GRAY);
-			drinkPrice = 0;
-			coinValue = 0;
-			refund = 0;
+			drinkPrice = -1;
+			paidCoinsValue = -1;
+			refund = -1;
 			initialSliders();
 		}
 
 		@Override
-		public void onCaculateRefundRaised() {
+		public void onComfirmCoinsRaised() {
+			refund = paidCoinsValue - drinkPrice;
 			if(refund>0) {
-				messagesToUser.setText("<html>Payment is successful and start to make drinks<br>you will get a refund of 0."+refund);
+				messagesToUser.setText("<html>Payment is successful, start to make drinks<br>You will get a refund of 0."+refund+"€");
+				theFSM.raiseOrderSuccess();
 			}else if(refund==0) {
-				messagesToUser.setText("Payment is successful, start to make drinks");
+				messagesToUser.setText("<html>Payment is successful, start to make drinks");
+				theFSM.raiseOrderSuccess();
 			}else if(refund<0) {
-				messagesToUser.setText("You still need to pay"+(-refund));
+				messagesToUser.setText("<html>You still need to pay "+(-0.01*refund)+"€");
 			}
 		}
-		
+
+		@Override
+		public void onIsActiveRaised() {
+			// nothing
+		}
 	}
 	
 	
@@ -183,7 +162,7 @@ public class DrinkFactoryMachine extends JFrame {
 	/**
 	 * @wbp.nonvisual location=311,475
 	 */
-	private final ImageIcon imageIcon = new ImageIcon();
+	//private final ImageIcon imageIcon = new ImageIcon();
 
 	/**
 	 * Launch the application.
@@ -253,6 +232,7 @@ public class DrinkFactoryMachine extends JFrame {
             public void actionPerformed(ActionEvent e) {
             	initialDrinkButton();
             	drinkPrice = 35;
+            	messagesToUser.setText("Please pay 0.35€ for coffee");
             	coffeeButton.setBackground(Color.green);
             	theFSM.raiseChooseDrink();
             }
@@ -268,6 +248,7 @@ public class DrinkFactoryMachine extends JFrame {
             public void actionPerformed(ActionEvent e) {
             	initialDrinkButton();
             	drinkPrice = 50;
+            	messagesToUser.setText("Please pay 0.50€ for expresso");
             	expressoButton.setBackground(Color.green);
             	theFSM.raiseChooseDrink();
             }
@@ -283,6 +264,7 @@ public class DrinkFactoryMachine extends JFrame {
             public void actionPerformed(ActionEvent e) {
             	initialDrinkButton();
             	drinkPrice = 40;
+            	messagesToUser.setText("Please pay 0.40€ for tea");
             	teaButton.setBackground(Color.green);
             	theFSM.raiseChooseDrink();
             }
@@ -404,7 +386,7 @@ public class DrinkFactoryMachine extends JFrame {
 		money50centsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	coinValue = 50;
+            	myCoin = 50;
             	theFSM.raiseChooseCoin();
             }
         });
@@ -416,7 +398,7 @@ public class DrinkFactoryMachine extends JFrame {
 		money25centsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	coinValue = 25;
+            	myCoin = 25;
             	theFSM.raiseChooseCoin();
             } 
         });
@@ -428,7 +410,7 @@ public class DrinkFactoryMachine extends JFrame {
 		money10centsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	coinValue = 10;
+            	myCoin = 10;
             	theFSM.raiseChooseCoin();
             }
         });
