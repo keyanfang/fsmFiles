@@ -46,10 +46,10 @@ public class DrinkFactoryMachine extends JFrame {
 	JButton money10centsButton;
 	JButton nfcBiiiipButton;
 	
-	int drinkPrice = -1; 
-	int paidCoinsValue = -1;
-	int myCoin = -1;
-	int refund = -1;
+	int drinkPrice; 
+	int paidCoinsValue;
+	int myCoin;
+	int refund;
 	boolean startPrepare; // TODO Auto-generated
 	
 	
@@ -83,54 +83,46 @@ public class DrinkFactoryMachine extends JFrame {
 		
 		@Override
 		public void onWaitCoinRaised() {
-			messagesToUser.setText("Please continue");
-			if(paidCoinsValue==-1) {
-				paidCoinsValue=0;
-			}
+			messagesToUser.setText("Please choose your drink");
 
 			myWait(500);
 			paidCoinsValue += myCoin;
-			if(drinkPrice!=-1) {
+			if(drinkPrice!=0) {
 				onComfirmCoinsRaised();
 			} 	
 		}
 
 		@Override
 		public void onWaitNFCRaised() {
-			messagesToUser.setText("Please pay with NFC");
+			messagesToUser.setText("<html>Please pay with NFC");
         	nfcBiiiipButton.setBackground(Color.green);
-        	try {
-				TimeUnit.MILLISECONDS.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-        	messagesToUser.setText("Payment is successful");
+        	myWait(500);
+        	messagesToUser.setText("<html>Payment is successful");
         	theFSM.raiseNFCSuccess();
 		}
 
 		@Override
 		public void onInitialRaised() { 
 			messagesToUser.setText("<html>You have not operated for 45 seconds<br>"
-					+ "The order has been canceled <br>The refund has been made");
+					+ "The order has been canceled <br>Your coins of 0."+paidCoinsValue+"€ have been returned");
 			initialDrinkButton();
 			nfcBiiiipButton.setBackground(Color.DARK_GRAY);
-			drinkPrice = -1;
-			paidCoinsValue = -1;
-			refund = -1;
+			drinkPrice = 0;
+			paidCoinsValue = 0;
+			refund = -0;
 			initialSliders();
 			// TODO Auto-generated method stub
-			
 			
 		}
 
 		@Override
 		public void onCancelOrderRaised() {
-			messagesToUser.setText("<html>The order has been canceled <br>The refund has been made");
+			messagesToUser.setText("<html>You canceled the order<br>Your coins of 0."+paidCoinsValue+"€ have been returned");
 			initialDrinkButton();
 			nfcBiiiipButton.setBackground(Color.DARK_GRAY);
-			drinkPrice = -1;
-			paidCoinsValue = -1;
-			refund = -1;
+			drinkPrice = 0;
+			paidCoinsValue = 0;
+			refund = 0;
 			initialSliders();
 		}
 
@@ -152,6 +144,11 @@ public class DrinkFactoryMachine extends JFrame {
 		public void onIsActiveRaised() {
 			// nothing
 		}
+
+		@Override
+		public void onCleanMachineRaised() {
+			messagesToUser.setText("<html>Machine is cleaned");
+		}
 	}
 	
 	
@@ -164,9 +161,6 @@ public class DrinkFactoryMachine extends JFrame {
 	 */
 	//private final ImageIcon imageIcon = new ImageIcon();
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -463,15 +457,15 @@ public class DrinkFactoryMachine extends JFrame {
 		contentPane.add(panel_2);
 
 		JButton cancelButton = new JButton("Cancel");
+		cancelButton.setForeground(Color.WHITE);
+		cancelButton.setBackground(Color.DARK_GRAY);
+		panel_2.add(cancelButton);
 		cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	theFSM.raiseCancel();
             }
         });
-		cancelButton.setForeground(Color.WHITE);
-		cancelButton.setBackground(Color.DARK_GRAY);
-		panel_2.add(cancelButton);
 
 		// listeners
 		addCupButton.addMouseListener(new MouseAdapter() {
