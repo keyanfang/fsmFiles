@@ -93,15 +93,6 @@ public class DrinkFactoryMachine extends JFrame {
 		}
 
 		@Override
-		public void onWaitNFCRaised() {
-			messagesToUser.setText("<html>Please pay with NFC");
-        	nfcBiiiipButton.setBackground(Color.green);
-        	myWait(500);
-        	messagesToUser.setText("<html>Payment is successful");
-        	theFSM.raiseNFCSuccess();
-		}
-
-		@Override
 		public void onInitialRaised() { 
 			messagesToUser.setText("<html>You have not operated for 45 seconds<br>"
 					+ "The order has been canceled <br>Your coins of 0."+paidCoinsValue+"€ have been returned");
@@ -421,6 +412,7 @@ public class DrinkFactoryMachine extends JFrame {
 		nfcBiiiipButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	messagesToUser.setText("<html>Your NFC information is saved");
             	theFSM.raiseChooseNFC();
             }
         });
