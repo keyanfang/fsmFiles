@@ -50,7 +50,7 @@ public class DrinkFactoryMachine extends JFrame {
 	int paidCoinsValue;
 	int myCoin;
 	int refund;
-	boolean startPrepare; // TODO Auto-generated
+	boolean startPrepare = false; // TODO 
 	
 	
 	public void initialDrinkButton() { 
@@ -97,24 +97,24 @@ public class DrinkFactoryMachine extends JFrame {
 			messagesToUser.setText("<html>You have not operated for 45 seconds<br>"
 					+ "The order has been canceled <br>Your coins of 0."+paidCoinsValue+"€ have been returned");
 			initialDrinkButton();
+			initialSliders();
 			nfcBiiiipButton.setBackground(Color.DARK_GRAY);
 			drinkPrice = 0;
 			paidCoinsValue = 0;
-			refund = -0;
-			initialSliders();
-			// TODO Auto-generated method stub
-			
+			refund = 0;
+			startPrepare = false;
 		}
 
 		@Override
 		public void onCancelOrderRaised() {
 			messagesToUser.setText("<html>You canceled the order<br>Your coins of 0."+paidCoinsValue+"€ have been returned");
 			initialDrinkButton();
+			initialSliders();
 			nfcBiiiipButton.setBackground(Color.DARK_GRAY);
 			drinkPrice = 0;
 			paidCoinsValue = 0;
 			refund = 0;
-			initialSliders();
+			startPrepare = false;
 		}
 
 		@Override
@@ -139,6 +139,35 @@ public class DrinkFactoryMachine extends JFrame {
 		@Override
 		public void onCleanMachineRaised() {
 			messagesToUser.setText("<html>Machine is cleaned");
+		}
+
+		@Override
+		public void onBarRaised() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onPrepStartRaised() {
+			startPrepare = true;
+			switch(drinkPrice) {
+				case 35:
+					theFSM.raiseIsCoffee();
+					break;
+				case 50:
+					theFSM.raiseIsEspresso();
+					break;
+				case 40:
+					theFSM.raiseIsTea();
+					break;
+			} 
+		}
+
+		@Override
+		public void onPrepFinishRaised() {
+			// TODO Auto-generated method stub
+			//进度条结束
+			messagesToUser.setText("<html>Your drink is ready");
 		}
 	}
 	
@@ -165,10 +194,6 @@ public class DrinkFactoryMachine extends JFrame {
 		});
 	}
 
-	
-	/**
-	 * Create the frame.
-	 */
 	public DrinkFactoryMachine() {
 		
 		theFSM = new DrinkStatemachine();
@@ -215,9 +240,11 @@ public class DrinkFactoryMachine extends JFrame {
 		coffeeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	if(startPrepare)
+            		return;
             	initialDrinkButton();
             	drinkPrice = 35;
-            	messagesToUser.setText("Please pay 0.35€ for coffee");
+            	messagesToUser.setText("<html>Please pay 0.35€ for coffee");
             	coffeeButton.setBackground(Color.green);
             	theFSM.raiseChooseDrink();
             }
@@ -231,9 +258,11 @@ public class DrinkFactoryMachine extends JFrame {
 		expressoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	if(startPrepare)
+            		return;
             	initialDrinkButton();
             	drinkPrice = 50;
-            	messagesToUser.setText("Please pay 0.50€ for expresso");
+            	messagesToUser.setText("<html>Please pay 0.50€ for expresso");
             	expressoButton.setBackground(Color.green);
             	theFSM.raiseChooseDrink();
             }
@@ -247,9 +276,11 @@ public class DrinkFactoryMachine extends JFrame {
 		teaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	if(startPrepare)
+            		return;
             	initialDrinkButton();
             	drinkPrice = 40;
-            	messagesToUser.setText("Please pay 0.40€ for tea");
+            	messagesToUser.setText("<html>Please pay 0.40€ for tea");
             	teaButton.setBackground(Color.green);
             	theFSM.raiseChooseDrink();
             }
@@ -282,6 +313,8 @@ public class DrinkFactoryMachine extends JFrame {
 		contentPane.add(sugarSlider);
 		sugarSlider.addChangeListener(new ChangeListener() {
 		      public void stateChanged(ChangeEvent event) {
+		    	  if(startPrepare)
+	            		return;
 		    	  theFSM.raiseChooseSlide();
 		      }
 		});
@@ -299,6 +332,8 @@ public class DrinkFactoryMachine extends JFrame {
 		contentPane.add(sizeSlider);
 		sizeSlider.addChangeListener(new ChangeListener() {
 		      public void stateChanged(ChangeEvent event) {
+		    	  if(startPrepare)
+	            		return;
 		    	  theFSM.raiseChooseSlide();
 		      }
 		});
@@ -315,6 +350,8 @@ public class DrinkFactoryMachine extends JFrame {
 		temperatureSlider.setBounds(301, 188, 200, 54);
 		temperatureSlider.addChangeListener(new ChangeListener() {
 		      public void stateChanged(ChangeEvent event) {
+		    	  if(startPrepare)
+	            		return;
 		    	  theFSM.raiseChooseSlide();
 		      }
 		});
@@ -371,6 +408,8 @@ public class DrinkFactoryMachine extends JFrame {
 		money50centsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	if(startPrepare)
+            		return;
             	myCoin = 50;
             	theFSM.raiseChooseCoin();
             }
@@ -383,6 +422,8 @@ public class DrinkFactoryMachine extends JFrame {
 		money25centsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	if(startPrepare)
+            		return;
             	myCoin = 25;
             	theFSM.raiseChooseCoin();
             } 
@@ -395,6 +436,8 @@ public class DrinkFactoryMachine extends JFrame {
 		money10centsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	if(startPrepare)
+            		return;
             	myCoin = 10;
             	theFSM.raiseChooseCoin();
             }
@@ -412,6 +455,8 @@ public class DrinkFactoryMachine extends JFrame {
 		nfcBiiiipButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	if(startPrepare)
+            		return;
             	messagesToUser.setText("<html>Your NFC information is saved");
             	theFSM.raiseChooseNFC();
             }
@@ -455,6 +500,8 @@ public class DrinkFactoryMachine extends JFrame {
 		cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	if(startPrepare)
+            		return;
             	theFSM.raiseCancel();
             }
         });
