@@ -92,10 +92,7 @@ public class DrinkFactoryMachine extends JFrame {
 			} 	
 		}
 
-		@Override
-		public void onInitialRaised() { 
-			messagesToUser.setText("<html>You have not operated for 45 seconds<br>"
-					+ "The order has been canceled <br>Your coins of 0."+paidCoinsValue+"€ have been returned");
+		void cleanInfos() {
 			initialDrinkButton();
 			initialSliders();
 			nfcBiiiipButton.setBackground(Color.DARK_GRAY);
@@ -104,17 +101,22 @@ public class DrinkFactoryMachine extends JFrame {
 			refund = 0;
 			startPrepare = false;
 		}
+		
+		@Override
+		public void onInitialRaised() { 
+			messagesToUser.setText("<html>You have not operated for 45 seconds<br>"
+					+ "The order has been canceled");
+			if(paidCoinsValue>0) {
+				messagesToUser.setText("<html>You have not operated for 45 seconds<br>"
+						+ "The order has been canceled <br>Your coins of 0."+paidCoinsValue+"€ have been returned");
+			}
+			cleanInfos();
+		}
 
 		@Override
 		public void onCancelOrderRaised() {
 			messagesToUser.setText("<html>You canceled the order<br>Your coins of 0."+paidCoinsValue+"€ have been returned");
-			initialDrinkButton();
-			initialSliders();
-			nfcBiiiipButton.setBackground(Color.DARK_GRAY);
-			drinkPrice = 0;
-			paidCoinsValue = 0;
-			refund = 0;
-			startPrepare = false;
+			cleanInfos();
 		}
 
 		@Override
@@ -132,13 +134,12 @@ public class DrinkFactoryMachine extends JFrame {
 		}
 
 		@Override
-		public void onIsActiveRaised() {
-			// nothing
-		}
-
-		@Override
 		public void onCleanMachineRaised() {
 			messagesToUser.setText("<html>Machine is cleaned");
+			cleanInfos();
+			sugarSlider.setEnabled(true);
+			sizeSlider.setEnabled(true);
+			temperatureSlider.setEnabled(true);
 		}
 
 		@Override
@@ -161,6 +162,9 @@ public class DrinkFactoryMachine extends JFrame {
 					theFSM.raiseIsTea();
 					break;
 			} 
+			sugarSlider.setEnabled(false);
+			sizeSlider.setEnabled(false);
+			temperatureSlider.setEnabled(false);
 		}
 
 		@Override
@@ -168,6 +172,21 @@ public class DrinkFactoryMachine extends JFrame {
 			// TODO Auto-generated method stub
 			//进度条结束
 			messagesToUser.setText("<html>Your drink is ready");
+		}
+
+		@Override
+		public void onIsActiveRaised() {
+			// nothing
+		}
+		
+		@Override
+		public void onWaterReadyRaised() {
+			// nothing
+		}
+
+		@Override
+		public void onCupReadyRaised() {
+			// nothing
 		}
 	}
 	
@@ -337,7 +356,7 @@ public class DrinkFactoryMachine extends JFrame {
 		    	  theFSM.raiseChooseSlide();
 		      }
 		});
-
+		
 		temperatureSlider = new JSlider();
 		temperatureSlider.setPaintLabels(true);
 		temperatureSlider.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -477,6 +496,15 @@ public class DrinkFactoryMachine extends JFrame {
 		addCupButton.setBackground(Color.DARK_GRAY);
 		addCupButton.setBounds(45, 336, 96, 25);
 		contentPane.add(addCupButton);
+		addCupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	if(startPrepare)
+            		return;
+            	//theFSM.raiseAddCup();
+            	//TODO
+            }
+        });
 
 		BufferedImage myPicture = null;
 		try {
