@@ -103,6 +103,13 @@ public class DrinkFactoryMachine extends JFrame {
 			cupValue = 0;
 			refund = 0;
 			startPrepare = false;
+			BufferedImage myPicture = null;
+			try {
+				myPicture = ImageIO.read(new File("./picts/vide2.jpg"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			labelForPictures.setIcon(new ImageIcon(myPicture));
 		}
 		
 		@Override
@@ -119,14 +126,6 @@ public class DrinkFactoryMachine extends JFrame {
 		@Override
 		public void onCancelOrderRaised() {
 			messagesToUser.setText("<html>You canceled the order<br>Your coins of 0."+paidCoinsValue+"€ have been returned");
-			BufferedImage myPicture = null;
-			try {
-				myPicture = ImageIO.read(new File("./picts/vide2.jpg"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			labelForPictures.setIcon(new ImageIcon(myPicture));
-			
 			cleanInfos();
 		}
  
@@ -154,12 +153,6 @@ public class DrinkFactoryMachine extends JFrame {
 		}
 
 		@Override
-		public void onBarRaised() {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
 		public void onPrepStartRaised() {
 			startPrepare = true;
 			switch(drinkPrice) {
@@ -178,6 +171,12 @@ public class DrinkFactoryMachine extends JFrame {
 			temperatureSlider.setEnabled(false);
 		}
 
+
+		@Override
+		public void onBarRaised() {
+			// TODO Auto-generated method stub
+		}
+		
 		@Override
 		public void onPrepFinishRaised() {
 			// TODO Auto-generated method stub
