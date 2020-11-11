@@ -56,6 +56,7 @@ public class DrinkFactoryMachine extends JFrame {
 	int myCoin;
 	int refund;
 	int cupValue;
+	int step;
 	boolean startPrepare = false; 
 	
 	
@@ -106,6 +107,7 @@ public class DrinkFactoryMachine extends JFrame {
 			paidCoinsValue = 0;
 			cupValue = 0;
 			refund = 0;
+			step = 0;
 			startPrepare = false;
 			BufferedImage myPicture = null;
 			try {
@@ -178,7 +180,11 @@ public class DrinkFactoryMachine extends JFrame {
 
 		@Override
 		public void onBarRaised() {
-//			progressBar= new JProgressBar();
+			
+			switch(step) {
+			
+			}
+			
 			timer = new Timer();
 			TimerTask Task1 = new TimerTask() {
 				@Override
@@ -396,7 +402,7 @@ public class DrinkFactoryMachine extends JFrame {
 		soupButton.setBounds(12, 145, 96, 25);
 		contentPane.add(soupButton);
 
-		JProgressBar progressBar = new JProgressBar();
+		progressBar = new JProgressBar();
 		progressBar.setStringPainted(true);
 		progressBar.setValue(0);
 		progressBar.setForeground(Color.LIGHT_GRAY);
