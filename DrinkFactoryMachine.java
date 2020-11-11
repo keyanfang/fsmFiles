@@ -11,6 +11,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
@@ -46,6 +48,8 @@ public class DrinkFactoryMachine extends JFrame {
 	JButton money10centsButton;
 	JButton nfcBiiiipButton;
 	JLabel labelForPictures;
+	JProgressBar progressBar;
+	Timer timer;
 	
 	int drinkPrice; 
 	int paidCoinsValue;
@@ -174,7 +178,78 @@ public class DrinkFactoryMachine extends JFrame {
 
 		@Override
 		public void onBarRaised() {
+//			progressBar= new JProgressBar();
+			timer = new Timer();
+			TimerTask Task1 = new TimerTask() {
+				@Override
+				public void run() {
+					progressBar.setValue(14);
+				}
+				
+			};
+			TimerTask Task2 = new TimerTask() {
+				@Override
+				public void run() {
+					progressBar.setValue(72);
+				}
+				
+			};
+			TimerTask Task3 = new TimerTask() {
+				@Override
+				public void run() {
+					progressBar.setValue(100);
+				}
+				
+			};
+			TimerTask Task4 = new TimerTask() {
+				@Override
+				public void run() {
+					progressBar.setValue(3);
+				}
+				
+			};
+			TimerTask Task5 = new TimerTask() {
+				@Override
+				public void run() {
+					progressBar.setValue(13);
+				}
+				
+			};
+			TimerTask Task6 = new TimerTask() {
+				@Override
+				public void run() {
+					progressBar.setValue(16);
+				}
+				
+			};
+			TimerTask Task7 = new TimerTask() {
+				@Override
+				public void run() {
+					progressBar.setValue(91);
+				}
+				
+			};
+			switch(drinkPrice) {
+			case 35:
+				timer.schedule(Task1, 1000);
+				timer.schedule(Task2, 6000);
+				timer.schedule(Task3, 7000);
+				break;
+			
+			case 40:
+				timer.schedule(Task1, 1000);
+				timer.schedule(Task2, 6000);
+				timer.schedule(Task3, 7000);
+				break;
+			case 50:
+				timer.schedule(Task4, 1000);
+				timer.schedule(Task5, 6000);
+				timer.schedule(Task6, 1000);
+				timer.schedule(Task7, 37000);
+				timer.schedule(Task3, 40000);
+				break;
 			// TODO Auto-generated method stub
+			}
 		}
 		
 		@Override
@@ -323,7 +398,7 @@ public class DrinkFactoryMachine extends JFrame {
 
 		JProgressBar progressBar = new JProgressBar();
 		progressBar.setStringPainted(true);
-		progressBar.setValue(10);
+		progressBar.setValue(0);
 		progressBar.setForeground(Color.LIGHT_GRAY);
 		progressBar.setBackground(Color.DARK_GRAY);
 		progressBar.setBounds(12, 254, 622, 26);
