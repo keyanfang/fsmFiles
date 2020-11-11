@@ -45,12 +45,14 @@ public class DrinkFactoryMachine extends JFrame {
 	JButton money25centsButton;
 	JButton money10centsButton;
 	JButton nfcBiiiipButton;
+	JLabel labelForPictures;
 	
 	int drinkPrice; 
 	int paidCoinsValue;
 	int myCoin;
 	int refund;
-	boolean startPrepare = false; // TODO 
+	int cupValue;
+	boolean startPrepare = false; 
 	
 	
 	public void initialDrinkButton() { 
@@ -98,6 +100,7 @@ public class DrinkFactoryMachine extends JFrame {
 			nfcBiiiipButton.setBackground(Color.DARK_GRAY);
 			drinkPrice = 0;
 			paidCoinsValue = 0;
+			cupValue = 0;
 			refund = 0;
 			startPrepare = false;
 		}
@@ -116,12 +119,20 @@ public class DrinkFactoryMachine extends JFrame {
 		@Override
 		public void onCancelOrderRaised() {
 			messagesToUser.setText("<html>You canceled the order<br>Your coins of 0."+paidCoinsValue+"€ have been returned");
+			BufferedImage myPicture = null;
+			try {
+				myPicture = ImageIO.read(new File("./picts/vide2.jpg"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			labelForPictures.setIcon(new ImageIcon(myPicture));
+			
 			cleanInfos();
 		}
-
+ 
 		@Override
 		public void onComfirmCoinsRaised() {
-			refund = paidCoinsValue - drinkPrice;
+			refund = paidCoinsValue + cupValue - drinkPrice;
 			if(refund>0) {
 				messagesToUser.setText("<html>Payment is successful, start to make drinks<br>You will get a refund of 0."+refund+"€");
 				theFSM.raiseOrderSuccess();
@@ -501,8 +512,8 @@ public class DrinkFactoryMachine extends JFrame {
             public void actionPerformed(ActionEvent e) {
             	if(startPrepare)
             		return;
-            	//theFSM.raiseAddCup();
-            	//TODO
+            	cupValue = 10;
+            	theFSM.raiseAddCup();
             }
         });
 
@@ -512,7 +523,7 @@ public class DrinkFactoryMachine extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		JLabel labelForPictures = new JLabel(new ImageIcon(myPicture));
+		labelForPictures = new JLabel(new ImageIcon(myPicture));
 		labelForPictures.setBounds(175, 319, 286, 260);
 		contentPane.add(labelForPictures);
 
