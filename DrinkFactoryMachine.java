@@ -33,6 +33,9 @@ import javax.swing.event.ChangeListener;
 import fr.univcotedazur.polytech.si4.fsm.project.drink.DrinkStatemachine;
 import fr.univcotedazur.polytech.si4.fsm.project.drink.IDrinkStatemachine.SCInterfaceListener;
 
+enum MyDrink{
+	COFFEE,EXPRESSO,TEA;
+}
 
 public class DrinkFactoryMachine extends JFrame {
 	JLabel messagesToUser;
@@ -50,7 +53,8 @@ public class DrinkFactoryMachine extends JFrame {
 	JLabel labelForPictures;
 	JProgressBar progressBar;
 	
-	
+	MyDrink myDrink;
+	boolean byNFC;
 	int drinkPrice; 
 	int paidCoinsValue;
 	int myCoin;
@@ -103,12 +107,15 @@ public class DrinkFactoryMachine extends JFrame {
 			initialDrinkButton();
 			initialSliders();
 			nfcBiiiipButton.setBackground(Color.DARK_GRAY);
+			myDrink = null;
 			drinkPrice = 0;
 			paidCoinsValue = 0;
 			cupValue = 0;
 			refund = 0;
 			step = 0;
+			byNFC=false;
 			startPrepare = false;
+			progressBar.setValue(0);
 			BufferedImage myPicture = null;
 			try {
 				myPicture = ImageIO.read(new File("./picts/vide2.jpg"));
@@ -161,6 +168,8 @@ public class DrinkFactoryMachine extends JFrame {
 		@Override
 		public void onPrepStartRaised() {
 			startPrepare = true;
+			if(byNFC)
+				messagesToUser.setText("<html>Payment is successful, start to make drinks");
 			switch(drinkPrice) {
 				case 35:
 					theFSM.raiseIsCoffee();
@@ -286,8 +295,6 @@ public class DrinkFactoryMachine extends JFrame {
 		
 		@Override
 		public void onPrepFinishRaised() {
-			// TODO Auto-generated method stub
-			//进度条结束
 			progressBar.setValue(100);
 			messagesToUser.setText("<html>Your drink is ready");
 		}
@@ -379,8 +386,10 @@ public class DrinkFactoryMachine extends JFrame {
             public void actionPerformed(ActionEvent e) {
             	if(startPrepare)
             		return;
-            	initialDrinkButton();
+            	
+            	myDrink = MyDrink.COFFEE;
             	drinkPrice = 35;
+            	initialDrinkButton();
             	messagesToUser.setText("<html>Please pay 0.35€ for coffee");
             	coffeeButton.setBackground(Color.green);
             	theFSM.raiseChooseDrink();
@@ -398,6 +407,7 @@ public class DrinkFactoryMachine extends JFrame {
             	if(startPrepare)
             		return;
             	initialDrinkButton();
+            	myDrink = MyDrink.EXPRESSO;
             	drinkPrice = 50;
             	messagesToUser.setText("<html>Please pay 0.50€ for expresso");
             	expressoButton.setBackground(Color.green);
@@ -415,6 +425,7 @@ public class DrinkFactoryMachine extends JFrame {
             public void actionPerformed(ActionEvent e) {
             	if(startPrepare)
             		return;
+            	myDrink = MyDrink.TEA;
             	initialDrinkButton();
             	drinkPrice = 40;
             	messagesToUser.setText("<html>Please pay 0.40€ for tea");
@@ -545,7 +556,7 @@ public class DrinkFactoryMachine extends JFrame {
 		money50centsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	if(startPrepare)
+            	if(startPrepare||byNFC)
             		return;
             	myCoin = 50;
             	theFSM.raiseChooseCoin();
@@ -559,7 +570,7 @@ public class DrinkFactoryMachine extends JFrame {
 		money25centsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	if(startPrepare)
+            	if(startPrepare||byNFC)
             		return;
             	myCoin = 25;
             	theFSM.raiseChooseCoin();
@@ -573,7 +584,7 @@ public class DrinkFactoryMachine extends JFrame {
 		money10centsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	if(startPrepare)
+            	if(startPrepare||byNFC)
             		return;
             	myCoin = 10;
             	theFSM.raiseChooseCoin();
@@ -592,8 +603,9 @@ public class DrinkFactoryMachine extends JFrame {
 		nfcBiiiipButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	if(startPrepare)
+            	if(startPrepare||paidCoinsValue>0)
             		return;
+            	byNFC=true;
             	messagesToUser.setText("<html>Your NFC information is saved");
             	theFSM.raiseChooseNFC();
             }

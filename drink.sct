@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0">
-  <sgraph:Statechart xmi:id="_IRpiIAoKEeuxVuC0SdEwDQ" specification="@EventDriven&#xA;// Use the event driven execution model.&#xA;// Runs a run-to-completion step&#xA;// each time an event is raised.&#xA;// Switch to cycle based behavior&#xA;// by specifying '@CycleBased(200)'&#xA;// instead.&#xA;&#xA;@ChildFirstExecution&#xA;// In composite states, execute&#xA;// child states first.&#xA;// @ParentFirstExecution does the opposite.&#xA;&#xA;interface:&#xA;var myCup: boolean = false&#xA;var byNFC: boolean = false&#xA;var tea: boolean = false&#xA;&#xA;in event chooseCoin&#xA;in event orderSuccess&#xA;in event chooseNFC&#xA;in event chooseSlide&#xA;in event chooseDrink&#xA;in event cancel&#xA;in event addCup&#xA;in event isCoffee&#xA;in event isEspresso&#xA;in event isTea&#xA;&#xA;&#xA;out event waitCoin&#xA;out event initial&#xA;out event cancelOrder&#xA;out event  isActive&#xA;out event comfirmCoins&#xA;out event cleanMachine&#xA;out event bar&#xA;out event waterReady&#xA;out event cupReady&#xA;out event prepStart&#xA;out event prepFinish&#xA;// Use CTRL + Space for content assist." name="drink">
+  <sgraph:Statechart xmi:id="_IRpiIAoKEeuxVuC0SdEwDQ" specification="@EventDriven&#xA;// Use the event driven execution model.&#xA;// Runs a run-to-completion step&#xA;// each time an event is raised.&#xA;// Switch to cycle based behavior&#xA;// by specifying '@CycleBased(200)'&#xA;// instead.&#xA;&#xA;@ChildFirstExecution&#xA;// In composite states, execute&#xA;// child states first.&#xA;// @ParentFirstExecution does the opposite.&#xA;&#xA;interface:&#xA;var myCup: boolean = false&#xA;var tea: boolean = false&#xA;&#xA;in event chooseCoin&#xA;in event orderSuccess&#xA;in event chooseNFC&#xA;in event chooseSlide&#xA;in event chooseDrink&#xA;in event cancel&#xA;in event addCup&#xA;in event isCoffee&#xA;in event isEspresso&#xA;in event isTea&#xA;&#xA;&#xA;out event waitCoin&#xA;out event initial&#xA;out event cancelOrder&#xA;out event  isActive&#xA;out event comfirmCoins&#xA;out event cleanMachine&#xA;out event bar&#xA;out event waterReady&#xA;out event cupReady&#xA;out event prepStart&#xA;out event prepFinish&#xA;// Use CTRL + Space for content assist." name="drink">
     <regions xmi:id="_ISaXIAoKEeuxVuC0SdEwDQ" name="main region">
       <vertices xsi:type="sgraph:State" xmi:id="_fiMlkAoMEeuxVuC0SdEwDQ" name="Customer" incomingTransitions="_LdtRoAoOEeuxVuC0SdEwDQ _XHKPEB6pEeuLZLLrYWnLfw _pUfEYCAYEeuEsIEGyxghaA">
         <outgoingTransitions xmi:id="_pUfEYCAYEeuEsIEGyxghaA" specification="cancel/raise cancelOrder" target="_fiMlkAoMEeuxVuC0SdEwDQ"/>
         <regions xmi:id="_fiNMoAoMEeuxVuC0SdEwDQ" name="r1">
-          <vertices xsi:type="sgraph:State" xmi:id="_A1gEMAoLEeuxVuC0SdEwDQ" specification="entry /&#xD;&#xA;byNFC=false;myCup=false" name="initial" incomingTransitions="_DHrQQAoNEeuxVuC0SdEwDQ">
-            <outgoingTransitions xmi:id="_2eUfoA-JEeuD49gohd0kfA" specification="chooseCoin[byNFC == false]/raise waitCoin;raise isActive" target="_gQYd0A-JEeuD49gohd0kfA"/>
+          <vertices xsi:type="sgraph:State" xmi:id="_A1gEMAoLEeuxVuC0SdEwDQ" specification="entry /&#xD;&#xA;myCup=false" name="initial" incomingTransitions="_DHrQQAoNEeuxVuC0SdEwDQ">
+            <outgoingTransitions xmi:id="_2eUfoA-JEeuD49gohd0kfA" specification="chooseCoin/raise waitCoin;raise isActive" target="_gQYd0A-JEeuD49gohd0kfA"/>
             <outgoingTransitions xmi:id="_PaRNUBUQEeuw07S0GHlWVw" specification="chooseDrink/raise isActive" target="_tOVWsAoSEeuxVuC0SdEwDQ"/>
-            <outgoingTransitions xmi:id="_xs5JABUQEeuw07S0GHlWVw" specification="chooseNFC/byNFC = true;raise isActive" target="_v_8fBRUQEeuw07S0GHlWVw"/>
+            <outgoingTransitions xmi:id="_xs5JABUQEeuw07S0GHlWVw" specification="chooseNFC/raise isActive" target="_v_8fBRUQEeuw07S0GHlWVw"/>
           </vertices>
           <vertices xsi:type="sgraph:Entry" xmi:id="_ITIv4AoKEeuxVuC0SdEwDQ">
             <outgoingTransitions xmi:id="_DHrQQAoNEeuxVuC0SdEwDQ" specification="" target="_A1gEMAoLEeuxVuC0SdEwDQ"/>
@@ -30,8 +30,8 @@
           </vertices>
           <vertices xsi:type="sgraph:State" xmi:id="_tOVWsAoSEeuxVuC0SdEwDQ" name="waitPaymentChoice" incomingTransitions="_hQ944AybEeu7rZcyowAuwQ _PaRNUBUQEeuw07S0GHlWVw">
             <outgoingTransitions xmi:id="_hQ944AybEeu7rZcyowAuwQ" specification="chooseDrink/raise isActive" target="_tOVWsAoSEeuxVuC0SdEwDQ"/>
-            <outgoingTransitions xmi:id="_a1oawBCZEeupgPS9rVCe0A" specification="chooseCoin[byNFC == false]/raise waitCoin;raise isActive" target="_gQYd0A-JEeuD49gohd0kfA"/>
-            <outgoingTransitions xmi:id="_ujA_MBhLEeuIqpe8ec6wyg" specification="chooseNFC/byNFC=true" target="_-MXaEBUTEeuLVLZDQt4fkw"/>
+            <outgoingTransitions xmi:id="_a1oawBCZEeupgPS9rVCe0A" specification="chooseCoin/raise waitCoin;raise isActive" target="_gQYd0A-JEeuD49gohd0kfA"/>
+            <outgoingTransitions xmi:id="_ujA_MBhLEeuIqpe8ec6wyg" specification="chooseNFC" target="_-MXaEBUTEeuLVLZDQt4fkw"/>
           </vertices>
           <vertices xsi:type="sgraph:State" xmi:id="_v_8fBRUQEeuw07S0GHlWVw" name="waitDrinkChoice" incomingTransitions="_xs5JABUQEeuw07S0GHlWVw">
             <outgoingTransitions xmi:id="_yZapABhLEeuIqpe8ec6wyg" specification="chooseDrink" target="_-MXaEBUTEeuLVLZDQt4fkw"/>
@@ -54,7 +54,7 @@
           </vertices>
           <vertices xsi:type="sgraph:State" xmi:id="_tCP74A-LEeuD49gohd0kfA" name="active" incomingTransitions="_xgJDgA-LEeuD49gohd0kfA _Ag2CkA-MEeuD49gohd0kfA">
             <outgoingTransitions xmi:id="_xgJDgA-LEeuD49gohd0kfA" specification=" isActive" target="_tCP74A-LEeuD49gohd0kfA"/>
-            <outgoingTransitions xmi:id="_SUTAoA-NEeuv6skrhgXuWA" specification="after 45s/raise initial;&#xD;&#xA;byNFC=false" target="_nKQNwA-LEeuD49gohd0kfA"/>
+            <outgoingTransitions xmi:id="_SUTAoA-NEeuv6skrhgXuWA" specification="after 45s/raise initial" target="_nKQNwA-LEeuD49gohd0kfA"/>
           </vertices>
         </regions>
         <regions xmi:id="_uYXmICQXEeuBbqcoKbBBaw" name="myCup">
@@ -917,7 +917,7 @@
                   <styles xsi:type="notation:ShapeStyle" xmi:id="_NLYaMRhNEeun698SV1HWGw" fontName="Verdana" fillColor="15720400" lineColor="12632256"/>
                   <styles xsi:type="notation:FontStyle" xmi:id="_NLYaMhhNEeun698SV1HWGw"/>
                   <styles xsi:type="notation:BooleanValueStyle" xmi:id="_NLa2cRhNEeun698SV1HWGw" name="isHorizontal" booleanValue="true"/>
-                  <layoutConstraint xsi:type="notation:Bounds" xmi:id="_NLYaMxhNEeun698SV1HWGw" x="63" width="126" height="53"/>
+                  <layoutConstraint xsi:type="notation:Bounds" xmi:id="_NLYaMxhNEeun698SV1HWGw" x="63" width="136" height="53"/>
                 </children>
                 <children xmi:id="_b6jVMSAgEeuEsIEGyxghaA" type="State" element="_b6jVPSAgEeuEsIEGyxghaA">
                   <children xsi:type="notation:DecorationNode" xmi:id="_b6jVMiAgEeuEsIEGyxghaA" type="StateName">
